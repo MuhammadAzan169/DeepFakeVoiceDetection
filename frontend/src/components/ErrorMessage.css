@@ -1,0 +1,79 @@
+﻿.error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  background: rgba(239, 68, 68, 0.04);
+  border: 1px solid rgba(239, 68, 68, 0.26);
+  border-radius: var(--radius-lg);
+}
+
+.error-icon {
+  color: var(--danger-400);
+  margin-bottom: 1rem;
+}
+
+.error-message h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.45rem;
+}
+
+.error-detail {
+  color: var(--text-secondary);
+  margin-bottom: 1.1rem;
+  max-width: 400px;
+  line-height: 1.6;
+}
+
+.error-help {
+  width: min(420px, 100%);
+  text-align: left;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.1rem;
+}
+
+.error-help p {
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.4rem;
+}
+
+.error-help ol {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.error-help li {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.2rem;
+  line-height: 1.5;
+}
+
+.retry-button {
+  padding: 0.7rem 1.4rem;
+  background: linear-gradient(135deg, var(--brand-500), var(--brand-700));
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 180ms ease;
+  box-shadow: 0 8px 26px rgba(59, 130, 246, 0.35);
+  font-family: "Inter", sans-serif;
+  min-height: 44px;
+  touch-action: manipulation;
+}
+
+.retry-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 36px rgba(59, 130, 246, 0.5);
+}

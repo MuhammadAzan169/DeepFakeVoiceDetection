@@ -1,110 +1,140 @@
-# 🎙️ Deepfake Voice Detection
+﻿# Deepfake Voice Detection
 
-An end-to-end AI system to detect deepfake voice recordings using both **audio features** and **transcribed text** from the audio. 
-This project uses **XGBoost classifiers** trained on engineered features and **OpenAI Whisper** for transcription.
+A full-stack deepfake voice detection project with:
 
-## 🚀 Key Features
+- FastAPI backend for model inference
+- React + Vite frontend for upload/record and result visualization
+- local training/inference utility scripts in the project root
 
-- 🎧 **Extracts 43 audio features**:
-  - MFCCs
-  - Delta MFCCs
-  - Pitch variance
-  - Spectral contrast
-  - Spectral flux
-- 📝 **Transcribes audio using OpenAI Whisper**
-- 🧠 **Trains three XGBoost models**:
-  - Audio-only
-  - Text-only
-  - Combined (audio + text)
-- 📊 **Evaluates all models**:
-  - Confusion matrix
-  - ROC-AUC
-  - Classification report
-- 💬 **Interpretable predictions**:
-  - Custom logic explains why a sample is classified as fake or real
-- 🌐 **Streamlit Web App**:
-  - Upload `.wav` or `.mp3` files
-  - Get instant predictions with reasoning
-- 💾 **Preprocessed CSVs, saved models, and visualizations** included
+The app predicts whether an input voice sample is likely `Real` or `Fake`, and returns transcript and explanation signals.
 
----
+## Repository Structure
 
-## 🧠 Tech Stack
+```text
+backend/                 # FastAPI API server
+frontend/                # React + Vite web app
+app.py                   # local script entry
+extract_features.py      # feature extraction utility
+prepare_dataset.py       # dataset preparation utility
+train_xgboost.py         # model training utility
+vectorize_features.py    # text/audio vectorization utility
+artifacts/               # local model artifacts (ignored in git)
+features/                # generated feature files (ignored in git)
+plots/                   # generated plots (ignored in git)
+```
 
-- **Python 3.11**
-- **Librosa** – Audio feature extraction
-- **OpenAI Whisper** – Transcription
-- **XGBoost** – Classification
-- **Scikit-learn** – Preprocessing, evaluation
-- **Streamlit** – Frontend interface
-- **Pandas**, **Joblib**, **TQDM**
+## Tech Stack
 
----
+- Backend: FastAPI, Uvicorn, scikit-learn/joblib, Whisper
+- Frontend: React, Vite, Axios
+- Models: XGBoost-based classifiers and preprocessing artifacts loaded from `artifacts/`
 
-## 📂 Project Structure
+## Prerequisites
 
-📦 Deepfake Voice Detection
-├── data_preparation.py
-├── feature_extraction.py
-├── vectorize_features.py
-├── train_xgboost.py
-├── app.py
+- Python 3.10+
+- Node.js 18+
+- npm 9+
+- Git
 
+## 1) Backend Setup and Run (PowerShell)
 
-## 📈 Model Results
+```powershell
+cd D:/Deep Fake Voice Detection/backend
+python -m pip install -r requirements.txt
+python run.py
+```
 
-| Model        | Accuracy | AUC     |
-|--------------|----------|---------|
-| Audio-only   | ~84%     | ~0.91   |
-| Text-only    | ~56%     | ~0.58   |
-| Combined     | **~80%** | **0.87** |
+Backend runs at:
 
+- http://localhost:8000
 
-## 🔍 How It Works
+## 2) Frontend Setup and Run (PowerShell)
 
-1. **Audio Feature Extraction**  
-   43 custom audio features from each `.wav`/`.mp3` file using `librosa`
+```powershell
+cd D:/Deep Fake Voice Detection/frontend
+npm install
+npm run dev
+```
 
-2. **Text Transcription**  
-   Uses OpenAI Whisper to convert speech to text
+Frontend runs at:
 
-3. **Vectorization**  
-   - Audio → Scaled with `StandardScaler`  
-   - Text → Transformed via `TfidfVectorizer` (1000 features)
+- http://localhost:5173
 
-4. **Model Training**  
-   Trains 3 models:
-   - Audio-only
-   - Text-only
-   - Combined (audio + transcript)
+## API Endpoints
 
-5. **Prediction Logic**  
-   Uses probabilities from all models to make a final prediction with custom fallback logic:
+- `GET /api/v1/health` - service health and artifact state
+- `GET /api/v1/ready` - readiness probe
+- `GET /api/v1/models/info` - model info
+- `POST /api/v1/predict` - single file prediction
+- `POST /api/v1/predict/batch` - batch prediction
 
-6. **Explainability**
+## Quick API Test
 
-Every prediction includes:
+```powershell
+curl.exe -X GET "http://localhost:8000/api/v1/health"
+curl.exe -X POST "http://localhost:8000/api/v1/predict" -F "file=@D:/path/to/sample.wav"
+```
 
-- 🔊 Audio patterns (e.g., pitch, spectral variation)
-- 📝 Text traits (length, punctuation, case)
-- 🔀 Combined logic reasoning
+## Frontend Notes
 
-## 🔮 Sample Output
+The UI supports:
 
-✅ Final Prediction: Fake
-📄 Transcript: "Hi there, I'm an AI-generated voice used for testing."
+- audio file upload (MP3/WAV/WEBM/OGG/M4A)
+- microphone recording in browser
+- mobile-optimized layout (improved touch targets, compact small-screen layout, safe-area support)
 
-📌 Reasoning:
-- 🔊 High variation in audio frequencies.
-- 🎤 Unusual pitch variation detected.
-- 📜 Transcript is long and coherent.
-- 🔀 Combined analysis of audio and text features.
+## Important: Artifacts Are Required
 
-## 🏆 Achievements
+Inference will only work when required model artifacts are present in `artifacts/`:
 
-- ✅ End-to-end audio+NLP pipeline
-- ✅ Handles edge cases & borderline decisions
-- ✅ Real-time usable with GUI
-- ✅ Combines ML, audio signal processing, and LLM transcription
+- `xgb_audio.pkl`
+- `xgb_text.pkl`
+- `xgb_combined.pkl`
+- `tfidf_vectorizer.pkl`
+- `audio_scaler.pkl`
+- `expected_feature_count.pkl`
 
-**⭐ If you liked this project, consider starring the repo!**
+If these files are missing, backend health/readiness will report not ready and prediction endpoints will not process requests.
+
+## Privacy and Git Hygiene
+
+This repository is configured to avoid pushing local/private generated content:
+
+- `artifacts/`
+- `plots/`
+- `frontend/node_modules/`
+- `frontend/dist/`
+- `frontend/.vite/`
+- generated feature CSVs
+- metadata CSV files containing local absolute paths
+- caches, temp files, and environment files
+
+If you share data files, sanitize local machine paths and personal identifiers first.
+
+## Pulling and Running on Another PC
+
+Yes, you can clone this repository on another PC and run the project.
+
+What will run immediately:
+
+- frontend app startup
+- backend server startup
+- health routes
+
+What needs extra setup for full predictions:
+
+- install backend/frontend dependencies
+- provide required files in `artifacts/`
+- ensure model-compatible environment (Python packages and Whisper dependencies)
+
+Without artifacts, prediction endpoints will return service-not-ready behavior by design.
+
+## Troubleshooting
+
+- Frontend cannot connect: confirm backend is running on `http://localhost:8000`
+- Backend not ready: check missing files in `artifacts/`
+- Prediction timeout: try smaller audio file (limit is 25MB)
+
+## License
+
+Add a LICENSE file if you plan to open-source this repository publicly.

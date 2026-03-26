@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Environment and secrets
+.env
+.env.*
+
+# Logs and runtime
+*.log
+*.pid
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Frontend dependencies/build cache
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.cache/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ML artifacts and generated outputs
+artifacts/
+plots/
+features/*_backup.csv
+features/*_features.csv
+train_metadata.csv
+val_metadata.csv
+test_metadata.csv
+*.pkl
+
+# Temporary files
+*.tmp
+*.temp

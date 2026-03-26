@@ -1,0 +1,12 @@
+﻿fastapi
+uvicorn
+python-multipart
+joblib
+numpy
+scipy
+scikit-learn
+xgboost
+librosa
+openai-whisper
+pydantic
+python-dotenv

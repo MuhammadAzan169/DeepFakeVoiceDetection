@@ -56,7 +56,8 @@ def predict_audio(fp):
     y, sr = librosa.load(fp, sr=16000)
     audio = whisper.pad_or_trim(y)
     mel = whisper.log_mel_spectrogram(audio).to(whisper_model.device)
-    result = whisper.decode(whisper_model, mel, whisper.DecodingOptions())
+    # Force English output regardless of spoken language.
+    result = whisper.decode(whisper_model, mel, whisper.DecodingOptions(task="translate", language="en"))
     txt = result.text.strip() or "[No speech]"
 
     # 2. Extract features
